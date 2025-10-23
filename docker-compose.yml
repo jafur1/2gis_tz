@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  effective-mobile-tests:
+    build: .
+    container_name: effective-mobile-tests
+    volumes:
+      - ./allure-results:/app/allure-results
+      - ./allure-report:/app/allure-report
+      - ./test-results:/app/test-results
+    environment:
+      - PYTHONPATH=/app
+      - ALLURE_RESULTS_DIR=/app/allure-results
+      - TEST_RESULTS_DIR=/app/test-results
+    command: ["python", "scripts/run_tests.py", "--generate-report"]
+    
+  # Сервис для запуска тестов в headless режиме
+  effective-mobile-tests-headless:
+    build: .
+    container_name: effective-mobile-tests-headless
+    volumes:
+      - ./allure-results:/app/allure-results
+      - ./allure-report:/app/allure-report
+      - ./test-results:/app/test-results
+    environment:
+      - PYTHONPATH=/app
+      - ALLURE_RESULTS_DIR=/app/allure-results
+      - TEST_RESULTS_DIR=/app/test-results
+    command: ["python", "scripts/run_tests.py", "--browser", "chromium", "--generate-report"]
+    
+  # Сервис для запуска только smoke тестов
+  effective-mobile-smoke-tests:
+    build: .
+    container_name: effective-mobile-smoke-tests
+    volumes:
+      - ./allure-results:/app/allure-results
+      - ./allure-report:/app/allure-report
+      - ./test-results:/app/test-results
+    environment:
+      - PYTHONPATH=/app
+      - ALLURE_RESULTS_DIR=/app/allure-results
+      - TEST_RESULTS_DIR=/app/test-results
+    command: ["python", "scripts/run_tests.py", "-m", "smoke", "--generate-report"]
+
+
